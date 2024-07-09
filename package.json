@@ -1,6 +1,7 @@
 {
   "name": "my-next-app",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "concurrently \"npm run dev-next\" \"npm run start-bot\"",
@@ -11,6 +12,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@neynar/nodejs-sdk": "^1.37.1",
     "concurrently": "^8.2.2",
     "dotenv": "^16.4.5",
     "next": "14.2.4",
