@@ -1,12 +1,9 @@
-// src/components/SwipableMemesComponent.js
 'use client';
 
 import React, { useState } from "react";
 import { useSwipeable } from "react-swipeable";
 
 const SwipableMemesComponent = ({ memes }) => {
-    console.log('memes in swipe compo', memes);
-
     const [currentIndex, setCurrentIndex] = useState(0);
     const [matchMessage, setMatchMessage] = useState('');
 
@@ -20,6 +17,10 @@ const SwipableMemesComponent = ({ memes }) => {
     const handleSwipe = (direction) => {
         if (direction === 'right') {
             setMatchMessage('Match!!');
+            setTimeout(() => {
+                setMatchMessage('');
+                setCurrentIndex((prevIndex) => (prevIndex + 1) % memes.length);
+            }, 1000); // Display the match message for 1 second
         } else {
             setMatchMessage('');
             setCurrentIndex((prevIndex) => (prevIndex + 1) % memes.length);
