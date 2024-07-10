@@ -14,8 +14,7 @@ const SwipableMemesComponent = ({ memes }) => {
         config: config.stiff,
         onRest: () => {
             if (props.x.get() !== 0) {
-                const nextIndex = (currentIndex + 1) % memes.length;
-                setCurrentIndex(nextIndex);
+                setCurrentIndex((prevIndex) => (prevIndex + 1) % memes.length);
                 api.start({ x: 0, opacity: 1 });
             }
         },
