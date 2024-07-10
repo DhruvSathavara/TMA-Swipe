@@ -22,7 +22,7 @@ const SwipableMemesComponent = ({ memes }) => {
 
     const handleSwipe = (direction) => {
         if (direction === 'right') {
-            setMatchMessage('Match!!');
+            setMatchMessage('Fun!!');
             setTimeout(() => {
                 setMatchMessage('');
             }, 1000); // Display the match message for 1 second
