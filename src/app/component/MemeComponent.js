@@ -6,16 +6,16 @@ import { useSpring, animated, config } from '@react-spring/web';
 
 const SwipableMemesComponent = ({ memes }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [nextIndex, setNextIndex] = useState(1);
     const [matchMessage, setMatchMessage] = useState('');
+
     const [props, api] = useSpring(() => ({
         x: 0,
         opacity: 1,
         config: config.stiff,
         onRest: () => {
             if (props.x.get() !== 0) {
+                const nextIndex = (currentIndex + 1) % memes.length;
                 setCurrentIndex(nextIndex);
-                setNextIndex((nextIndex + 1) % memes.length);
                 api.start({ x: 0, opacity: 1 });
             }
         },
@@ -23,9 +23,10 @@ const SwipableMemesComponent = ({ memes }) => {
 
     useEffect(() => {
         // Preload the next image
+        const nextImageIndex = (currentIndex + 1) % memes.length;
         const nextImage = new Image();
-        nextImage.src = memes[nextIndex];
-    }, [nextIndex]);
+        nextImage.src = memes[nextImageIndex];
+    }, [currentIndex, memes]);
 
     const handleSwipe = (direction) => {
         if (direction === 'right') {
