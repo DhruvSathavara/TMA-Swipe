@@ -2,12 +2,36 @@
 
 import React, { useState } from "react";
 import { useSwipeable } from "react-swipeable";
-import { useSpring, animated } from '@react-spring/web';
+import { useSpring, animated, config } from '@react-spring/web';
 
 const SwipableMemesComponent = ({ memes }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [matchMessage, setMatchMessage] = useState('');
-    const [props, api] = useSpring(() => ({ x: 0, opacity: 1 }));
+
+    const [props, api] = useSpring(() => ({
+        x: 0,
+        opacity: 1,
+        config: config.stiff,
+        onRest: () => {
+            if (props.x.get() !== 0) {
+                setCurrentIndex((prevIndex) => (prevIndex + 1) % memes.length);
+                api.start({ x: 0, opacity: 1 });
+            }
+        },
+    }));
+
+    const handleSwipe = (direction) => {
+        if (direction === 'right') {
+            setMatchMessage('Match!!');
+            setTimeout(() => {
+                setMatchMessage('');
+            }, 1000); // Display the match message for 1 second
+        }
+        api.start({
+            x: direction === 'right' ? 500 : -500,
+            opacity: 0,
+        });
+    };
 
     const handlers = useSwipeable({
         onSwipedLeft: () => handleSwipe('left'),
@@ -15,21 +39,6 @@ const SwipableMemesComponent = ({ memes }) => {
         preventDefaultTouchmoveEvent: true,
         trackMouse: true,
     });
-
-    const handleSwipe = (direction) => {
-        if (direction === 'right') {
-            setMatchMessage('Match!!');
-            setTimeout(() => {
-                setMatchMessage('');
-                setCurrentIndex((prevIndex) => (prevIndex + 1) % memes.length);
-                api.start({ x: 0, opacity: 1 });
-            }, 1000); // Display the match message for 1 second
-        } else {
-            setCurrentIndex((prevIndex) => (prevIndex + 1) % memes.length);
-            api.start({ x: 0, opacity: 1 });
-        }
-        api.start({ x: direction === 'right' ? 500 : -500, opacity: 0 });
-    };
 
     const containerStyle = {
         display: 'flex',
