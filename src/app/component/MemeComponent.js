@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSwipeable } from "react-swipeable";
 import { useSpring, animated, config } from '@react-spring/web';
 
@@ -20,13 +20,6 @@ const SwipableMemesComponent = ({ memes }) => {
             }
         },
     }));
-
-    useEffect(() => {
-        // Preload the next image
-        const nextImageIndex = (currentIndex + 1) % memes.length;
-        const nextImage = new Image();
-        nextImage.src = memes[nextImageIndex];
-    }, [currentIndex, memes]);
 
     const handleSwipe = (direction) => {
         if (direction === 'right') {
