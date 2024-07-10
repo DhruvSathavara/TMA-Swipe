@@ -1,6 +1,15 @@
-// src/app/page.tsx
 import AllMemes from './component/post/allMemes';
 import { NeynarAPIClient, FeedType, FilterType } from "@neynar/nodejs-sdk";
+
+// Assuming the actual structure of embeds based on your description
+interface Embed {
+  type: string;
+  url?: string;
+  image?: {
+    url: string;
+  };
+  [key: string]: any; // To accommodate other possible properties
+}
 
 async function fetchMemes() {
   const client = new NeynarAPIClient("C97766C5-7700-47BC-B388-34CFC2D909C1");
@@ -14,10 +23,12 @@ async function fetchMemes() {
       parentUrl: memesChannelUrl,
     });
 
+    console.log('feed is here======', feed.casts[0].embeds);
+
     const memes = feed.casts
-      .flatMap(cast => cast.embeds)
-      .filter(embed => embed.url)
-      .map(embed => embed.url);
+      .flatMap(cast => cast.embeds as Embed[])
+      .filter(embed => embed.url || embed.image?.url)
+      .map(embed => embed.url || embed.image?.url);
 
     return memes;
   } catch (error) {

@@ -5,6 +5,8 @@ import React, { useState } from "react";
 import { useSwipeable } from "react-swipeable";
 
 const SwipableMemesComponent = ({ memes }) => {
+    console.log('memes in swipe compo', memes);
+
     const [currentIndex, setCurrentIndex] = useState(0);
     const [matchMessage, setMatchMessage] = useState('');
 
