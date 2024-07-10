@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@neynar/nodejs-sdk": "^1.37.1",
+    "@react-spring/web": "^9.7.3",
     "concurrently": "^8.2.2",
     "dotenv": "^16.4.5",
     "next": "14.2.4",

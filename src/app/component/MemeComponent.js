@@ -2,10 +2,12 @@
 
 import React, { useState } from "react";
 import { useSwipeable } from "react-swipeable";
+import { useSpring, animated } from '@react-spring/web';
 
 const SwipableMemesComponent = ({ memes }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [matchMessage, setMatchMessage] = useState('');
+    const [props, api] = useSpring(() => ({ x: 0, opacity: 1 }));
 
     const handlers = useSwipeable({
         onSwipedLeft: () => handleSwipe('left'),
@@ -20,11 +22,13 @@ const SwipableMemesComponent = ({ memes }) => {
             setTimeout(() => {
                 setMatchMessage('');
                 setCurrentIndex((prevIndex) => (prevIndex + 1) % memes.length);
+                api.start({ x: 0, opacity: 1 });
             }, 1000); // Display the match message for 1 second
         } else {
-            setMatchMessage('');
             setCurrentIndex((prevIndex) => (prevIndex + 1) % memes.length);
+            api.start({ x: 0, opacity: 1 });
         }
+        api.start({ x: direction === 'right' ? 500 : -500, opacity: 0 });
     };
 
     const containerStyle = {
@@ -49,6 +53,7 @@ const SwipableMemesComponent = ({ memes }) => {
         justifyContent: 'center',
         alignItems: 'center',
         overflow: 'hidden',
+        position: 'absolute',
     };
 
     const imageStyle = {
@@ -77,9 +82,9 @@ const SwipableMemesComponent = ({ memes }) => {
     return (
         <div style={containerStyle} {...handlers}>
             {matchMessage && <div style={matchMessageStyle}>{matchMessage}</div>}
-            <div style={cardStyle}>
+            <animated.div style={{ ...cardStyle, ...props }}>
                 <img src={memes[currentIndex]} alt={`Meme ${currentIndex}`} style={imageStyle} />
-            </div>
+            </animated.div>
         </div>
     );
 };
