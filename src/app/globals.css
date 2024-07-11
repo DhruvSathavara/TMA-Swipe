@@ -93,39 +93,50 @@ a {
   }
 }
 
-/* Add this CSS to your global stylesheet or a module */
 
-.swipe-container {
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  overflow: hidden;
-}
 
-.swipe-card-container {
-  position: absolute;
-  width: 90vw;
-  height: 80vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: transform 0.3s ease;
-  will-change: transform;
-}
-
-.swipe-card-container.active {
-  z-index: 10;
-}
 
 .swipe-card {
+  position: relative;
+  width: 600px;
+  padding: 20px;
+  max-width: 85vw;
+  height: 50vw;
+  border-radius: 20px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0px 10px 10px -5px rgba(0, 0, 0, 0.3);
+}
+
+.memecard_container {
+  display: flex;
+  justify-content: center;
+  margin-top: 5vh;
+}
+
+.swipe {
+  position: absolute;
+}
+
+.swipeButtons {
+  position: fixed;
+  bottom: 10vh;
   width: 100%;
-  height: 100%;
-  background-size: contain;
-  background-position: center center;
-  background-repeat: no-repeat;
-  border-radius: 10px;
-  box-shadow: 0px 10px 30px -5px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.swipeButtons .MuiIconButton-root {
+  background-color: white;
+  box-shadow: 0px 10px 53px 0px rgba(0, 0, 0, 0.3) !important;
+}
+
+.swipeButtons_Close {
+  padding: 3vw !important;
+  color: #ec5e6f !important;
+}
+
+.swipeButtons_Favorite {
+  padding: 3vw !important;
+  color: #62b4f9 !important;
 }

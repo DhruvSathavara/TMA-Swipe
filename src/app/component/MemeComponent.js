@@ -1,53 +1,68 @@
 'use client';
+
 import React, { useState, useRef } from "react";
+import TinderCard from "react-tinder-card";
+import CloseIcon from "@material-ui/icons/Close";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import IconButton from "@material-ui/core/IconButton";
 
 const SwipableMemesComponent = ({ memes }) => {
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const containerRef = useRef();
+    const [currentIndex, setCurrentIndex] = useState(memes.length - 1);
+    const childRefs = useRef([]);
 
-    const handleTouchStart = (e) => {
-        containerRef.current.startX = e.touches[0].clientX;
-    };
-
-    const handleTouchMove = (e) => {
-        const touchX = e.touches[0].clientX;
-        const moveX = touchX - containerRef.current.startX;
-        containerRef.current.style.transform = `translateX(${moveX}px)`;
-    };
-
-    const handleTouchEnd = (e) => {
-        const endX = e.changedTouches[0].clientX;
-        const moveX = endX - containerRef.current.startX;
-
-        if (moveX > 100) {
-            // Swipe Right
-            setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));
-        } else if (moveX < -100) {
-            // Swipe Left
-            setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, memes.length - 1));
+    const swiped = (direction, index) => {
+        console.log(`You swiped ${direction} on ${index}`);
+        if (index === 0) {
+            setCurrentIndex(memes.length - 1);
+        } else {
+            setCurrentIndex(index - 1);
         }
+    };
 
-        containerRef.current.style.transform = `translateX(0px)`;
+    const outOfFrame = (index) => {
+        console.log(`${index} left the screen`);
+        if (currentIndex < 0) {
+            setCurrentIndex(memes.length - 1);
+        }
+    };
+
+    const swipe = (dir) => {
+        if (currentIndex >= 0 && currentIndex < memes.length) {
+            childRefs.current[currentIndex].swipe(dir); // Swipe the card
+        }
     };
 
     return (
-        <div className="swipe-container">
-            {memes.map((meme, index) => (
-                <div
-                    key={index}
-                    className={`swipe-card-container ${index === currentIndex ? "active" : ""}`}
-                    ref={index === currentIndex ? containerRef : null}
-                    onTouchStart={index === currentIndex ? handleTouchStart : null}
-                    onTouchMove={index === currentIndex ? handleTouchMove : null}
-                    onTouchEnd={index === currentIndex ? handleTouchEnd : null}
-                >
-                    <div
-                        className="swipe-card"
-                        style={{ backgroundImage: `url(${meme})` }}
-                    />
+        <>
+            <div>
+                <div className="memecard_container">
+                    {memes.map((meme, index) => (
+                        <TinderCard
+                            ref={(el) => (childRefs.current[index] = el)}
+                            className="swipe"
+                            key={index}
+                            onSwipe={(dir) => swiped(dir, index)}
+                            onCardLeftScreen={() => outOfFrame(index)}
+                            preventSwipe={["up", "down"]}
+                        >
+                            <div
+                                className="swipe-card"
+                                style={{ backgroundImage: `url(${meme})` }}
+                            />
+                        </TinderCard>
+                    ))}
                 </div>
-            ))}
-        </div>
+            </div>
+            <div className="swipeButtons">
+                <IconButton className="swipeButtons_Close" onClick={() => swipe('left')}>
+                    <CloseIcon fontSize="large" />
+                </IconButton>
+
+                <IconButton className="swipeButtons_Favorite" onClick={() => swipe('right')}>
+                    <FavoriteIcon fontSize="large" />
+                </IconButton>
+            </div>
+        </>
     );
 };
 
