@@ -1,18 +1,15 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { useSprings, animated, to as interpolate } from '@react-spring/web';
 import { useDrag } from 'react-use-gesture';
 
 // Helper functions for swipe calculations
-const to = (i) => ({ x: 0, y: i * -4, scale: 1, rot: -10 + Math.random() * 20, delay: i * 100 });
-const from = () => ({ x: 0, rot: 0, scale: 1.5, y: 1000 });
+const to = (i) => ({ x: 0, y: 0, scale: 1, rot: 0, delay: i * 100 });
+const from = () => ({ x: 0, y: 0, scale: 1.5, rot: 0 });
 const trans = (r, s) => `perspective(1500px) rotateX(30deg) rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
 
 const SwipableMemesComponent = ({ memes }) => {
-
-    console.log('memes in swipable compo', memes);
-
     const [gone] = useState(() => new Set()); // Set to keep track of swiped cards
     const [props, api] = useSprings(memes.length, i => ({ ...to(i), from: from() })); // Create springs for each card
 
@@ -32,11 +29,21 @@ const SwipableMemesComponent = ({ memes }) => {
     });
 
     return (
-        <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div style={{ height: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
             {props.map(({ x, y, rot, scale }, i) => (
-                <animated.div key={i} style={{ transform: interpolate([x, y], (x, y) => `translate3d(${x}px,${y}px,0)`) }}>
-                    {/* This is the card itself, we're binding our gesture to it (and inject its index so we know which is which) */}
-                    <animated.div {...bind(i)} style={{ transform: interpolate([rot, scale], trans), backgroundImage: `url(${memes[i]})` }} className="swipe-card" />
+                <animated.div
+                    key={i}
+                    style={{ zIndex: memes.length - i, transform: interpolate([x, y], (x, y) => `translate3d(${x}px,${y}px,0)`) }}
+                    className="swipe-card-container"
+                >
+                    <animated.div
+                        {...bind(i)}
+                        style={{
+                            transform: interpolate([rot, scale], trans),
+                            backgroundImage: `url(${memes[i]})`,
+                        }}
+                        className="swipe-card"
+                    />
                 </animated.div>
             ))}
         </div>
