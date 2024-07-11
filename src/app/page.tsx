@@ -1,5 +1,6 @@
 import AllMemes from './component/post/allMemes';
 import { NeynarAPIClient, FeedType, FilterType } from "@neynar/nodejs-sdk";
+import TinderCard from "./component/tinderCard/tinderCard";
 
 // Assuming the actual structure of embeds based on your description
 interface Embed {
@@ -44,4 +45,14 @@ export default async function Home() {
       <AllMemes memes={memes} />
     </main>
   );
+
+
+  // return (
+  //   <view style={{ flex: 1 }}>
+  //     {memes && memes.map((meme, index) => {
+  //       return <TinderCard meme={meme} />
+  //     }).reverse()}
+  //   </view>
+  // )
+
 }

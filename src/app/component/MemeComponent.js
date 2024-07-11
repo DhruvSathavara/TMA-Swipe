@@ -1,98 +1,44 @@
 'use client';
-import React, { useState } from "react";
-import { useSwipeable } from "react-swipeable";
-import { useSpring, animated, config } from '@react-spring/web';
+
+import React, { useState, useEffect, useRef } from "react";
+import { useSprings, animated, to as interpolate } from '@react-spring/web';
+import { useDrag } from 'react-use-gesture';
+
+// Helper functions for swipe calculations
+const to = (i) => ({ x: 0, y: i * -4, scale: 1, rot: -10 + Math.random() * 20, delay: i * 100 });
+const from = () => ({ x: 0, rot: 0, scale: 1.5, y: 1000 });
+const trans = (r, s) => `perspective(1500px) rotateX(30deg) rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
 
 const SwipableMemesComponent = ({ memes }) => {
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [matchMessage, setMatchMessage] = useState('');
 
-    const [props, api] = useSpring(() => ({
-        x: 0,
-        opacity: 1,
-        config: config.stiff,
-        onRest: () => {
-            if (props.x.get() !== 0) {
-                setCurrentIndex((prevIndex) => (prevIndex + 1) % memes.length);
-                api.start({ x: 0, opacity: 1 });
-            }
-        },
-    }));
+    console.log('memes in swipable compo', memes);
 
-    const handleSwipe = (direction) => {
-        if (direction === 'right') {
-            setMatchMessage('Fun!!');
-            setTimeout(() => {
-                setMatchMessage('');
-            }, 1000); // Display the match message for 1 second
-        }
-        api.start({
-            x: direction === 'right' ? 500 : -500,
-            opacity: 0,
+    const [gone] = useState(() => new Set()); // Set to keep track of swiped cards
+    const [props, api] = useSprings(memes.length, i => ({ ...to(i), from: from() })); // Create springs for each card
+
+    const bind = useDrag(({ args: [index], down, movement: [mx], direction: [xDir], velocity }) => {
+        const trigger = velocity > 0.2; // If you flick hard enough, trigger the card to fly out
+        const dir = xDir < 0 ? -1 : 1; // Direction should either point left or right
+        if (!down && trigger) gone.add(index); // If button/finger's up and trigger velocity is reached, add index to gone set
+        api.start(i => {
+            if (index !== i) return; // We're only interested in changing spring-data for the current spring
+            const isGone = gone.has(index);
+            const x = isGone ? (200 + window.innerWidth) * dir : down ? mx : 0; // When a card is gone it flies out left or right, otherwise goes back to zero
+            const rot = mx / 100 + (isGone ? dir * 10 * velocity : 0); // How much the card tilts, flicking it harder makes it rotate faster
+            const scale = down ? 1.1 : 1; // Active cards lift up a bit
+            return { x, rot, scale, delay: undefined, config: { friction: 50, tension: down ? 800 : isGone ? 200 : 500 } };
         });
-    };
-
-    const handlers = useSwipeable({
-        onSwipedLeft: () => handleSwipe('left'),
-        onSwipedRight: () => handleSwipe('right'),
-        preventDefaultTouchmoveEvent: true,
-        trackMouse: true,
+        if (!down && gone.size === memes.length) setTimeout(() => gone.clear() || api.start(i => to(i)), 600); // When all cards are gone, reset the deck
     });
 
-    const containerStyle = {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        backgroundColor: '#f0f0f0',
-        position: 'relative',
-        flexDirection: 'column',
-    };
-
-    const cardStyle = {
-        width: '90%',
-        maxWidth: '400px',
-        height: '90%',
-        maxHeight: '600px',
-        backgroundColor: 'white',
-        borderRadius: '10px',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        overflow: 'hidden',
-        position: 'absolute',
-    };
-
-    const imageStyle = {
-        width: '100%',
-        height: 'auto',
-        objectFit: 'cover',
-    };
-
-    const matchMessageStyle = {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        fontSize: '2rem',
-        color: 'green',
-        backgroundColor: 'white',
-        padding: '10px 20px',
-        borderRadius: '10px',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-    };
-
-    if (!memes || memes.length === 0) {
-        return <p>No memes found!</p>;
-    }
-
     return (
-        <div style={containerStyle} {...handlers}>
-            {matchMessage && <div style={matchMessageStyle}>{matchMessage}</div>}
-            <animated.div style={{ ...cardStyle, ...props }}>
-                <img src={memes[currentIndex]} alt={`Meme ${currentIndex}`} style={imageStyle} />
-            </animated.div>
+        <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            {props.map(({ x, y, rot, scale }, i) => (
+                <animated.div key={i} style={{ transform: interpolate([x, y], (x, y) => `translate3d(${x}px,${y}px,0)`) }}>
+                    {/* This is the card itself, we're binding our gesture to it (and inject its index so we know which is which) */}
+                    <animated.div {...bind(i)} style={{ transform: interpolate([rot, scale], trans), backgroundImage: `url(${memes[i]})` }} className="swipe-card" />
+                </animated.div>
+            ))}
         </div>
     );
 };
