@@ -7,7 +7,7 @@ import { useDrag } from 'react-use-gesture';
 // Helper functions for swipe calculations
 const to = (i) => ({ x: 0, y: 0, scale: 1, rot: 0, delay: i * 100 });
 const from = () => ({ x: 0, y: 0, scale: 1.5, rot: 0 });
-const trans = (r, s) => `perspective(1500px) rotateX(30deg) rotateY(${r / 10}deg) rotateZ(${r}deg) scale(${s})`;
+const trans = (r, s) => `perspective(1500px) rotateX(0deg) rotateY(0deg) rotateZ(${r}deg) scale(${s})`; // Removed rotation on X and Y axes
 
 const SwipableMemesComponent = ({ memes }) => {
     const [gone] = useState(() => new Set()); // Set to keep track of swiped cards
@@ -29,11 +29,11 @@ const SwipableMemesComponent = ({ memes }) => {
     });
 
     return (
-        <div style={{ height: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative' }}>
+        <div style={{ height: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
             {props.map(({ x, y, rot, scale }, i) => (
                 <animated.div
                     key={i}
-                    style={{ zIndex: memes.length - i, transform: interpolate([x, y], (x, y) => `translate3d(${x}px,${y}px,0)`) }}
+                    style={{ zIndex: memes.length - i, transform: interpolate([x, y], (x, y) => `translate3d(${x}px,${y}px,0)`), position: 'absolute' }}
                     className="swipe-card-container"
                 >
                     <animated.div
