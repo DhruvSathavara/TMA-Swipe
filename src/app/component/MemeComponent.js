@@ -1,50 +1,51 @@
 'use client';
-
-import React, { useState } from "react";
-import { useSprings, animated, to as interpolate } from '@react-spring/web';
-import { useDrag } from 'react-use-gesture';
-
-// Helper functions for swipe calculations
-const to = (i) => ({ x: 0, y: 0, scale: 1, rot: 0, delay: i * 100 });
-const from = () => ({ x: 0, y: 0, scale: 1.5, rot: 0 });
-const trans = (r, s) => `perspective(1500px) rotateX(0deg) rotateY(0deg) rotateZ(${r}deg) scale(${s})`; // Removed rotation on X and Y axes
+import React, { useState, useRef } from "react";
 
 const SwipableMemesComponent = ({ memes }) => {
-    const [gone] = useState(() => new Set()); // Set to keep track of swiped cards
-    const [props, api] = useSprings(memes.length, i => ({ ...to(i), from: from() })); // Create springs for each card
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const containerRef = useRef();
 
-    const bind = useDrag(({ args: [index], down, movement: [mx], direction: [xDir], velocity }) => {
-        const trigger = velocity > 0.2; // If you flick hard enough, trigger the card to fly out
-        const dir = xDir < 0 ? -1 : 1; // Direction should either point left or right
-        if (!down && trigger) gone.add(index); // If button/finger's up and trigger velocity is reached, add index to gone set
-        api.start(i => {
-            if (index !== i) return; // We're only interested in changing spring-data for the current spring
-            const isGone = gone.has(index);
-            const x = isGone ? (200 + window.innerWidth) * dir : down ? mx : 0; // When a card is gone it flies out left or right, otherwise goes back to zero
-            const rot = mx / 100 + (isGone ? dir * 10 * velocity : 0); // How much the card tilts, flicking it harder makes it rotate faster
-            const scale = down ? 1.1 : 1; // Active cards lift up a bit
-            return { x, rot, scale, delay: undefined, config: { friction: 50, tension: down ? 800 : isGone ? 200 : 500 } };
-        });
-        if (!down && gone.size === memes.length) setTimeout(() => gone.clear() || api.start(i => to(i)), 600); // When all cards are gone, reset the deck
-    });
+    const handleTouchStart = (e) => {
+        containerRef.current.startX = e.touches[0].clientX;
+    };
+
+    const handleTouchMove = (e) => {
+        const touchX = e.touches[0].clientX;
+        const moveX = touchX - containerRef.current.startX;
+        containerRef.current.style.transform = `translateX(${moveX}px)`;
+    };
+
+    const handleTouchEnd = (e) => {
+        const endX = e.changedTouches[0].clientX;
+        const moveX = endX - containerRef.current.startX;
+
+        if (moveX > 100) {
+            // Swipe Right
+            setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+        } else if (moveX < -100) {
+            // Swipe Left
+            setCurrentIndex((prevIndex) => Math.min(prevIndex + 1, memes.length - 1));
+        }
+
+        containerRef.current.style.transform = `translateX(0px)`;
+    };
 
     return (
-        <div style={{ height: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
-            {props.map(({ x, y, rot, scale }, i) => (
-                <animated.div
-                    key={i}
-                    style={{ zIndex: memes.length - i, transform: interpolate([x, y], (x, y) => `translate3d(${x}px,${y}px,0)`), position: 'absolute' }}
-                    className="swipe-card-container"
+        <div className="swipe-container">
+            {memes.map((meme, index) => (
+                <div
+                    key={index}
+                    className={`swipe-card-container ${index === currentIndex ? "active" : ""}`}
+                    ref={index === currentIndex ? containerRef : null}
+                    onTouchStart={index === currentIndex ? handleTouchStart : null}
+                    onTouchMove={index === currentIndex ? handleTouchMove : null}
+                    onTouchEnd={index === currentIndex ? handleTouchEnd : null}
                 >
-                    <animated.div
-                        {...bind(i)}
-                        style={{
-                            transform: interpolate([rot, scale], trans),
-                            backgroundImage: `url(${memes[i]})`,
-                        }}
+                    <div
                         className="swipe-card"
+                        style={{ backgroundImage: `url(${meme})` }}
                     />
-                </animated.div>
+                </div>
             ))}
         </div>
     );
