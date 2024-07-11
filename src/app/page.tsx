@@ -1,6 +1,6 @@
 import AllMemes from './component/post/allMemes';
 import { NeynarAPIClient, FeedType, FilterType } from "@neynar/nodejs-sdk";
-import TinderCard from "./component/tinderCard/tinderCard";
+// import TinderCard from "./component/tinderCard/tinderCard";
 
 // Assuming the actual structure of embeds based on your description
 interface Embed {
