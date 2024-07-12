@@ -2,6 +2,8 @@
 
 import React, { useState, useMemo, useRef } from 'react';
 import TinderCard from 'react-tinder-card';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart, faTimes } from '@fortawesome/free-solid-svg-icons'
 
 function Advanced({ memes }) {
 
@@ -35,7 +37,7 @@ function Advanced({ memes }) {
 
     const swipe = async (dir) => {
         if (canSwipe && currentIndex < memes.length) {
-            await childRefs[currentIndex].current.swipe(dir);
+            await childRefs[currentIndex].current.swipe(dir); // This triggers the swipe
         }
     };
 
@@ -54,16 +56,20 @@ function Advanced({ memes }) {
                     <TinderCard
                         ref={childRefs[index]}
                         className="swipe"
-                        key={index}
+                        key={meme + index}
                         onSwipe={(dir) => swiped(dir, index)}
                         onCardLeftScreen={() => outOfFrame(index)}
+                        flickOnSwipe={true}
+                        preventSwipe={['up', 'down']}
+                        swipeRequirementType="position"
+                        swipeThreshold={150}
                     >
                         <div
                             style={{ backgroundImage: `url(${meme})` }}
                             className="card"
-                        >
-                        </div>
+                        />
                     </TinderCard>
+
                 ))}
             </div>
             <div className="buttons">
@@ -71,13 +77,13 @@ function Advanced({ memes }) {
                     style={{ backgroundColor: !canSwipe && '#c3c4d3' }}
                     onClick={() => swipe('left')}
                 >
-                    Swipe left!
+                    <FontAwesomeIcon icon={faTimes} />
                 </button>
                 <button
                     style={{ backgroundColor: !canSwipe && '#c3c4d3' }}
                     onClick={() => swipe('right')}
                 >
-                    Swipe right!
+                    <FontAwesomeIcon icon={faHeart} />
                 </button>
             </div>
         </div>
