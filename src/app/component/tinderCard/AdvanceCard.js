@@ -4,6 +4,8 @@ import React, { useState, useMemo, useRef } from 'react';
 import TinderCard from 'react-tinder-card';
 
 function Advanced({ memes }) {
+
+    console.log(memes);
     const [currentIndex, setCurrentIndex] = useState(memes.length - 1);
     const currentIndexRef = useRef(currentIndex);
 
@@ -47,7 +49,6 @@ function Advanced({ memes }) {
                 href="https://fonts.googleapis.com/css?family=Alatsi&display=swap"
                 rel="stylesheet"
             />
-            <h1>React Tinder Card</h1>
             <div className="cardContainer">
                 {memes.map((meme, index) => (
                     <TinderCard
