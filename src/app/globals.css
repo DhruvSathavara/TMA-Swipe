@@ -110,11 +110,8 @@ a {
   position: relative;
   background-color: #fff;
   width: 90vw;
-  /* Reduced width for better mobile handling */
   max-width: 379px;
-  /* Ensure it does not exceed this width */
   height: 65vh;
-  /* Height based on viewport height */
   box-shadow: 0 0 17px rgba(0, 0, 0, 0.3);
   border-radius: 20px;
   background-size: cover;
@@ -127,35 +124,37 @@ a {
   justify-content: center;
   align-items: center;
   height: 70vh;
-  /* Adjusted height based on viewport */
   position: relative;
 }
 
 .buttons {
-  margin-top: 20px;
-  /* Reduced margin */
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
 }
 
 .buttons button {
-  padding: 10px;
-  border-radius: 5px;
+  padding: 15px;
+  border-radius: 50%;
   border: none;
   color: #fff;
-  font-size: 18px;
-  background-color: #9198e5;
-  transition: all 0.2s ease-in-out;
-  margin: 5px;
-  /* Reduced margin */
-  width: 45vw;
-  /* Width based on viewport width */
-  max-width: 160px;
-  /* Ensure it does not exceed this width */
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+  font-size: 24px;
+  background-color: #ff5864;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  width: 60px;
+  height: 60px;
+  margin: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s ease-in-out;
 }
 
 .buttons button:hover {
-  transform: scale(1.05);
+  transform: scale(1.09);
+}
+
+.buttons button:active {
+  transform: scale(0.9);
 }
