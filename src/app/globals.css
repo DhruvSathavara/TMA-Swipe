@@ -4,11 +4,9 @@
   --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
     "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
     "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
-
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
-
   --primary-glow: conic-gradient(from 180deg at 50% 50%,
       #16abff33 0deg,
       #0885ff33 55deg,
@@ -17,7 +15,6 @@
       transparent 360deg);
   --secondary-glow: radial-gradient(rgba(255, 255, 255, 1),
       rgba(255, 255, 255, 0));
-
   --tile-start-rgb: 239, 245, 249;
   --tile-end-rgb: 228, 232, 233;
   --tile-border: conic-gradient(#00000080,
@@ -27,7 +24,6 @@
       #00000010,
       #00000010,
       #00000080);
-
   --callout-rgb: 238, 240, 241;
   --callout-border-rgb: 172, 175, 176;
   --card-rgb: 180, 185, 188;
@@ -39,13 +35,11 @@
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
-
     --primary-glow: radial-gradient(rgba(1, 65, 255, 0.4), rgba(1, 65, 255, 0));
     --secondary-glow: linear-gradient(to bottom right,
         rgba(1, 65, 255, 0),
         rgba(1, 65, 255, 0),
         rgba(1, 65, 255, 0.3));
-
     --tile-start-rgb: 2, 13, 46;
     --tile-end-rgb: 2, 5, 19;
     --tile-border: conic-gradient(#ffffff80,
@@ -55,7 +49,6 @@
         #ffffff10,
         #ffffff10,
         #ffffff80);
-
     --callout-rgb: 20, 20, 20;
     --callout-border-rgb: 108, 108, 108;
     --card-rgb: 100, 100, 100;
@@ -93,50 +86,65 @@ a {
   }
 }
 
+.swipe-container {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  min-height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(#e66465, #9198e5);
+}
 
-
-
-.swipe-card {
+.card {
   position: relative;
-  width: 600px;
-  padding: 20px;
-  max-width: 85vw;
-  height: 50vw;
+  background-color: #fff;
+  width: 95vw;
+  max-width: 300px;
+  height: 400px;
+  box-shadow: 0px 0px 17px 0px rgba(0, 0, 0, 0.30);
   border-radius: 20px;
   background-size: cover;
   background-position: center;
-  box-shadow: 0px 10px 10px -5px rgba(0, 0, 0, 0.3);
 }
 
-.memecard_container {
+.cardContainer {
+  width: 100%;
   display: flex;
   justify-content: center;
-  margin-top: 5vh;
+  align-items: center;
+  position: relative;
+  height: 400px;
 }
 
 .swipe {
   position: absolute;
 }
 
-.swipeButtons {
-  position: fixed;
-  bottom: 10vh;
-  width: 100%;
+.buttons {
+  margin-top: 20px;
   display: flex;
-  justify-content: space-evenly;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.swipeButtons .MuiIconButton-root {
-  background-color: white;
-  box-shadow: 0px 10px 53px 0px rgba(0, 0, 0, 0.3) !important;
+.buttons button {
+  flex-shrink: 0;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  background-color: #9198e5;
+  transition: 200ms;
+  margin: 10px;
+  font-weight: bolder;
+  width: 160px;
+  box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.10);
 }
 
-.swipeButtons_Close {
-  padding: 3vw !important;
-  color: #ec5e6f !important;
-}
-
-.swipeButtons_Favorite {
-  padding: 3vw !important;
-  color: #62b4f9 !important;
+.buttons button:hover {
+  transform: scale(1.05);
 }

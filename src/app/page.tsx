@@ -1,4 +1,5 @@
 import AllMemes from './component/post/allMemes';
+import Advanced from './component//tinderCard/AdvanceCard'
 import { NeynarAPIClient, FeedType, FilterType } from "@neynar/nodejs-sdk";
 // import TinderCard from "./component/tinderCard/tinderCard";
 
@@ -24,7 +25,7 @@ async function fetchMemes() {
       parentUrl: memesChannelUrl,
     });
 
-    console.log('feed is here======', feed.casts[0].embeds);
+    // console.log('feed is here======', feed.casts[0].embeds);
 
     const memes = feed.casts
       .flatMap(cast => cast.embeds as Embed[])
@@ -40,9 +41,15 @@ async function fetchMemes() {
 
 export default async function Home() {
   const memes = await fetchMemes();
+  // return (
+  //   <main>
+  //     <AllMemes memes={memes} />
+  //   </main>
+  // );
+
   return (
     <main>
-      <AllMemes memes={memes} />
+      <Advanced memes={memes} />
     </main>
   );
 

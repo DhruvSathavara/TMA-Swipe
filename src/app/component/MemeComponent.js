@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import TinderCard from "react-tinder-card";
 import CloseIcon from "@material-ui/icons/Close";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -8,12 +8,21 @@ import IconButton from "@material-ui/core/IconButton";
 
 const SwipableMemesComponent = ({ memes }) => {
     const [currentIndex, setCurrentIndex] = useState(memes.length - 1);
-    const childRefs = useRef([]);
+    const [currentMemes, setCurrentMemes] = useState(memes);
+    const childRefs = useRef(memes.map(() => React.createRef()));
+
+    useEffect(() => {
+        if (currentIndex < 0) {
+            // Reset the currentIndex to the end of the new list of memes
+            setCurrentIndex(currentMemes.length - 1);
+        }
+    }, [currentIndex, currentMemes]);
 
     const swiped = (direction, index) => {
         console.log(`You swiped ${direction} on ${index}`);
-        if (index === 0) {
+        if (index < currentMemes.length - memes.length) {
             setCurrentIndex(memes.length - 1);
+            setCurrentMemes((prevMemes) => [...prevMemes, ...memes]);
         } else {
             setCurrentIndex(index - 1);
         }
@@ -21,14 +30,11 @@ const SwipableMemesComponent = ({ memes }) => {
 
     const outOfFrame = (index) => {
         console.log(`${index} left the screen`);
-        if (currentIndex < 0) {
-            setCurrentIndex(memes.length - 1);
-        }
     };
 
     const swipe = (dir) => {
-        if (currentIndex >= 0 && currentIndex < memes.length) {
-            childRefs.current[currentIndex].swipe(dir); // Swipe the card
+        if (currentIndex >= 0 && currentIndex < currentMemes.length) {
+            childRefs.current[currentIndex].current.swipe(dir); // Swipe the card
         }
     };
 
@@ -36,9 +42,9 @@ const SwipableMemesComponent = ({ memes }) => {
         <>
             <div>
                 <div className="memecard_container">
-                    {memes.map((meme, index) => (
+                    {currentMemes.map((meme, index) => (
                         <TinderCard
-                            ref={(el) => (childRefs.current[index] = el)}
+                            ref={childRefs.current[index]}
                             className="swipe"
                             key={index}
                             onSwipe={(dir) => swiped(dir, index)}
