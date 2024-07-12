@@ -2,9 +2,6 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import TinderCard from "react-tinder-card";
-import CloseIcon from "@material-ui/icons/Close";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import IconButton from "@material-ui/core/IconButton";
 
 const SwipableMemesComponent = ({ memes }) => {
     const [currentIndex, setCurrentIndex] = useState(memes.length - 1);
@@ -59,7 +56,7 @@ const SwipableMemesComponent = ({ memes }) => {
                     ))}
                 </div>
             </div>
-            <div className="swipeButtons">
+            {/* <div className="swipeButtons">
                 <IconButton className="swipeButtons_Close" onClick={() => swipe('left')}>
                     <CloseIcon fontSize="large" />
                 </IconButton>
@@ -67,7 +64,7 @@ const SwipableMemesComponent = ({ memes }) => {
                 <IconButton className="swipeButtons_Favorite" onClick={() => swipe('right')}>
                     <FavoriteIcon fontSize="large" />
                 </IconButton>
-            </div>
+            </div> */}
         </>
     );
 };
