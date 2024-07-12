@@ -86,14 +86,22 @@ a {
   }
 }
 
+
+
+.swipe {
+  position: absolute;
+}
+
 .swipe-container {
   text-align: center;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
+  /* Changed to space-around to ensure spacing is distributed */
   align-items: center;
   width: 100vw;
-  min-height: 100vh;
+  height: 100vh;
+  /* Ensuring it covers exactly the height of the viewport */
   overflow: hidden;
   background: linear-gradient(#e66465, #9198e5);
 }
@@ -101,10 +109,13 @@ a {
 .card {
   position: relative;
   background-color: #fff;
-  width: 95vw;
+  width: 90vw;
+  /* Reduced width for better mobile handling */
   max-width: 379px;
-  height: 490px;
-  box-shadow: 0px 0px 17px 0px rgba(0, 0, 0, 0.30);
+  /* Ensure it does not exceed this width */
+  height: 65vh;
+  /* Height based on viewport height */
+  box-shadow: 0 0 17px rgba(0, 0, 0, 0.3);
   border-radius: 20px;
   background-size: cover;
   background-position: center;
@@ -115,34 +126,34 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 70vh;
+  /* Adjusted height based on viewport */
   position: relative;
-  height: 400px;
-}
-
-.swipe {
-  position: absolute;
 }
 
 .buttons {
-  margin-top: 85px;
+  margin-top: 20px;
+  /* Reduced margin */
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .buttons button {
-  flex-shrink: 0;
   padding: 10px;
   border-radius: 5px;
   border: none;
   color: #fff;
   font-size: 18px;
   background-color: #9198e5;
-  transition: 200ms;
-  margin: 10px;
-  font-weight: bolder;
-  width: 160px;
-  box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.10);
+  transition: all 0.2s ease-in-out;
+  margin: 5px;
+  /* Reduced margin */
+  width: 45vw;
+  /* Width based on viewport width */
+  max-width: 160px;
+  /* Ensure it does not exceed this width */
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
 }
 
 .buttons button:hover {
