@@ -90,7 +90,7 @@ a {
 .swipe {
   position: absolute;
   will-change: transform;
-  transition: transform 0.7s ease, opacity 0.7s ease;
+  transition: transform 0.1s ease, opacity 0.1s ease;
   /* Slowing down the transition */
 }
 
@@ -123,7 +123,7 @@ a {
 .swipe-overlay {
   background: linear-gradient(to bottom right, #fff200, #fffde7);
   /* Lighter yellow gradient */
-  transition: background-color 0.7s ease, opacity 0.7s ease;
+  transition: background-color 0.1s ease, opacity 0.1s ease;
   /* Slowing down the transition */
 }
 

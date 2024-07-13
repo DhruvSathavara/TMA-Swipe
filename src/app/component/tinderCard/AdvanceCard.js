@@ -76,12 +76,12 @@ function Advanced({ memes }) {
                             flickOnSwipe={true}
                             preventSwipe={['up', 'down']}
                             swipeRequirementType="position"
-                            swipeThreshold={150}
+                            swipeThreshold={250}
                         >
                             <div className={`card ${swipeDirection ? 'swipe-overlay' : ''}`}>
                                 {swipeDirection ? (
                                     <div className="swipe-label">
-                                        {swipeDirection === 'left' ? 'Meh 🙄' : 'Lol 🤣'}
+                                        {swipeDirection === 'left' ? 'Not Fun 🙄' : 'Fun 😄'}
                                     </div>
                                 ) : (
                                     <>
