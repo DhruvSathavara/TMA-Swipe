@@ -3,12 +3,11 @@
 import React, { useState, useMemo, useRef } from 'react';
 import TinderCard from 'react-tinder-card';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart, faTimes } from '@fortawesome/free-solid-svg-icons'
+import { faHeart, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 function Advanced({ memes }) {
-
-    console.log(memes);
     const [currentIndex, setCurrentIndex] = useState(memes.length - 1);
+    const [swipeDirection, setSwipeDirection] = useState(null);
     const currentIndexRef = useRef(currentIndex);
 
     const childRefs = useMemo(
@@ -27,8 +26,12 @@ function Advanced({ memes }) {
     const canSwipe = currentIndex >= 0;
 
     const swiped = (direction, index) => {
-        const newIndex = (index - 1 + memes.length) % memes.length;
-        updateCurrentIndex(newIndex);
+        setSwipeDirection(direction);
+        setTimeout(() => {
+            const newIndex = index - 1;
+            updateCurrentIndex(newIndex);
+            setSwipeDirection(null);
+        }, 300); // Display duration in milliseconds
     };
 
     const outOfFrame = (idx) => {
@@ -37,6 +40,7 @@ function Advanced({ memes }) {
 
     const swipe = async (dir) => {
         if (canSwipe && currentIndex < memes.length) {
+            setSwipeDirection(dir); // Set swipe direction for label
             await childRefs[currentIndex].current.swipe(dir); // This triggers the swipe
         }
     };
@@ -53,23 +57,29 @@ function Advanced({ memes }) {
             />
             <div className="cardContainer">
                 {memes.map((meme, index) => (
-                    <TinderCard
-                        ref={childRefs[index]}
-                        className="swipe"
-                        key={meme + index}
-                        onSwipe={(dir) => swiped(dir, index)}
-                        onCardLeftScreen={() => outOfFrame(index)}
-                        flickOnSwipe={true}
-                        preventSwipe={['up', 'down']}
-                        swipeRequirementType="position"
-                        swipeThreshold={150}
-                    >
-                        <div
-                            style={{ backgroundImage: `url(${meme})` }}
-                            className="card"
-                        />
-                    </TinderCard>
-
+                    currentIndex === index && (
+                        <TinderCard
+                            ref={childRefs[index]}
+                            className="swipe"
+                            key={meme + index}
+                            onSwipe={(dir) => swiped(dir, index)}
+                            onCardLeftScreen={() => outOfFrame(index)}
+                            flickOnSwipe={true}
+                            preventSwipe={['up', 'down']}
+                            swipeRequirementType="position"
+                            swipeThreshold={150}
+                        >
+                            <div className={`card ${swipeDirection ? 'swipe-overlay' : ''}`}
+                                style={{ backgroundImage: swipeDirection ? 'none' : `url(${meme})` }}
+                            >
+                                {swipeDirection && (
+                                    <div className="swipe-label">
+                                        {swipeDirection === 'left' ? 'Not Fun 🙄' : 'Fun 🤣'}
+                                    </div>
+                                )}
+                            </div>
+                        </TinderCard>
+                    )
                 ))}
             </div>
             <div className="buttons">
