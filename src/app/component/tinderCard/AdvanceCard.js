@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import TinderCard from 'react-tinder-card';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -9,6 +9,13 @@ function Advanced({ memes }) {
     const [currentIndex, setCurrentIndex] = useState(memes.length - 1);
     const [swipeDirection, setSwipeDirection] = useState(null);
     const currentIndexRef = useRef(currentIndex);
+
+    useEffect(() => {
+        if (currentIndex < 0 && memes.length > 0) {
+            // Reset the current index to the last item if it goes below 0
+            setCurrentIndex(memes.length - 1);
+        }
+    }, [currentIndex, memes.length]);
 
     const childRefs = useMemo(
         () =>
@@ -35,7 +42,9 @@ function Advanced({ memes }) {
     };
 
     const outOfFrame = (idx) => {
-        currentIndexRef.current >= idx && childRefs[idx].current.restoreCard();
+        if (childRefs[idx].current) {
+            childRefs[idx].current.restoreCard();
+        }
     };
 
     const swipe = async (dir) => {
@@ -69,13 +78,19 @@ function Advanced({ memes }) {
                             swipeRequirementType="position"
                             swipeThreshold={150}
                         >
-                            <div className={`card ${swipeDirection ? 'swipe-overlay' : ''}`}
-                                style={{ backgroundImage: swipeDirection ? 'none' : `url(${meme})` }}
-                            >
-                                {swipeDirection && (
+                            <div className={`card ${swipeDirection ? 'swipe-overlay' : ''}`}>
+                                {swipeDirection ? (
                                     <div className="swipe-label">
-                                        {swipeDirection === 'left' ? 'Not Fun 🙄' : 'Fun 🤣'}
+                                        {swipeDirection === 'left' ? 'Meh 🙄' : 'Lol 🤣'}
                                     </div>
+                                ) : (
+                                    <>
+                                        {meme.endsWith('.mp4') || meme.includes('video') ? (
+                                            <video className="media" src={meme} controls />
+                                        ) : (
+                                            <div className="media" style={{ backgroundImage: `url(${meme})` }} />
+                                        )}
+                                    </>
                                 )}
                             </div>
                         </TinderCard>
