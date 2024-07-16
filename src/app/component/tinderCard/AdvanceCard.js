@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import TinderCard from 'react-tinder-card';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,18 +11,11 @@ function Advanced({ memes }) {
 
     useEffect(() => {
         if (currentIndex < 0 && memes.length > 0) {
-            // Reset the current index to the last item if it goes below 0
             setCurrentIndex(memes.length - 1);
         }
     }, [currentIndex, memes.length]);
 
-    const childRefs = useMemo(
-        () =>
-            Array(memes.length)
-                .fill(0)
-                .map(() => React.createRef()),
-        [memes.length]
-    );
+    const childRefs = useMemo(() => Array(memes.length).fill(0).map(() => React.createRef()), [memes.length]);
 
     const updateCurrentIndex = (val) => {
         setCurrentIndex(val);
@@ -38,7 +30,7 @@ function Advanced({ memes }) {
             const newIndex = index - 1;
             updateCurrentIndex(newIndex);
             setSwipeDirection(null);
-        }, 300); // Display duration in milliseconds
+        }, 300); // Clear direction after the transition
     };
 
     const outOfFrame = (idx) => {
@@ -49,21 +41,13 @@ function Advanced({ memes }) {
 
     const swipe = async (dir) => {
         if (canSwipe && currentIndex < memes.length) {
-            setSwipeDirection(dir); // Set swipe direction for label
-            await childRefs[currentIndex].current.swipe(dir); // This triggers the swipe
+            setSwipeDirection(dir);
+            await childRefs[currentIndex].current.swipe(dir);
         }
     };
 
     return (
         <div className="swipe-container">
-            <link
-                href="https://fonts.googleapis.com/css?family=Damion&display=swap"
-                rel="stylesheet"
-            />
-            <link
-                href="https://fonts.googleapis.com/css?family=Alatsi&display=swap"
-                rel="stylesheet"
-            />
             <div className="cardContainer">
                 {memes.map((meme, index) => (
                     currentIndex === index && (
@@ -96,16 +80,17 @@ function Advanced({ memes }) {
                         </TinderCard>
                     )
                 ))}
+
             </div>
             <div className="buttons">
                 <button
-                    style={{ backgroundColor: !canSwipe && '#c3c4d3' }}
+                    style={{ backgroundColor: swipeDirection === 'left' ? '#ff4d4d' : '#c3c4d3' }}
                     onClick={() => swipe('left')}
                 >
                     <FontAwesomeIcon icon={faTimes} />
                 </button>
                 <button
-                    style={{ backgroundColor: !canSwipe && '#c3c4d3' }}
+                    style={{ backgroundColor: swipeDirection === 'right' ? '#4dff4d' : '#c3c4d3' }}
                     onClick={() => swipe('right')}
                 >
                     <FontAwesomeIcon icon={faHeart} />
