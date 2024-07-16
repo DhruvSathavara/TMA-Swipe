@@ -173,9 +173,13 @@ a {
 .media {
   width: 100%;
   height: 100%;
-  background-size: contain;
+  border-radius: 20px;
+  background-size: contain !important;
   background-position: center;
   background-repeat: no-repeat;
+  background-color: #EFEFEF;
+  /* Fallback color */
+  background-image: linear-gradient(to bottom, #6e6d6d, #a45656, #a6bf7b);
 }
 
 .buttons button:hover {

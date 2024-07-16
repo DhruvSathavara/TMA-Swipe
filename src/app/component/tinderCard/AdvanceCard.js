@@ -8,12 +8,14 @@ function Advanced({ memes }) {
     const [currentIndex, setCurrentIndex] = useState(memes.length - 1);
     const [swipeDirection, setSwipeDirection] = useState(null);
     const currentIndexRef = useRef(currentIndex);
-
+    const [backgroundColor, setBackgroundColor] = useState('#EFEFEF');  // Default background color
+    const imgRef = useRef(null);
     useEffect(() => {
         if (currentIndex < 0 && memes.length > 0) {
             setCurrentIndex(memes.length - 1);
         }
     }, [currentIndex, memes.length]);
+    // const ColorThief = require('colorthief');
 
     const childRefs = useMemo(() => Array(memes.length).fill(0).map(() => React.createRef()), [memes.length]);
 
