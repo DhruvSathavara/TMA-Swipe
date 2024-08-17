@@ -4,7 +4,9 @@ require('dotenv')
 // console.log(TOKEN,'--------------');
 const bot = new Telegraf('7313216675:AAENDcBucJ2Pjltw9M7IMV_E2IjhfUr-8Cg');
 
-const web_link = "https://tma-swipe.vercel.app/";
+// const web_link = "https://tma-swipe.vercel.app/";
+const web_link = "https://tma-swipe-virid.vercel.app/";
+
 
 bot.start((ctx) =>
     ctx.reply("Welcome To the App :) ", {
